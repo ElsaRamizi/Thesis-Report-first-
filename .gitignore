@@ -1,0 +1,17 @@
+# Java / Spring Boot
+demo/target/
+*.class
+*.log
+
+# React / Node
+frontend/node_modules/
+frontend/dist/
+
+# Environment files
+frontend/.env
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
