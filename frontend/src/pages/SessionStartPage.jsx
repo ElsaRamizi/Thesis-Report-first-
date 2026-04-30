@@ -40,6 +40,8 @@ export default function SessionStartPage() {
     return <Navigate to="/not-found" replace />;
   }
 
+  const isDualNBack = task?.id === 'dual-n-back';
+
   return (
     <div className="stack-lg">
       {loading ? <LoadingState label="Loading session setup..." /> : null}
@@ -50,8 +52,8 @@ export default function SessionStartPage() {
         <p>{task.description}</p>
         <div className="session-summary">
           <div>
-            <strong>{trials.length}</strong>
-            <span>Trials</span>
+            <strong>{isDualNBack ? '60' : trials.length}</strong>
+            <span>{isDualNBack ? 'Adaptive trials' : 'Trials'}</span>
           </div>
           <div>
             <strong>{task.durationMinutes} min</strong>
@@ -66,9 +68,20 @@ export default function SessionStartPage() {
 
       <Card title="Before you begin">
         <ul className="metric-list">
-          <li>Work in a quiet space and keep your focus on the prompt.</li>
-          <li>Respond as quickly and accurately as possible.</li>
-          <li>Your trial-by-trial responses will be summarized immediately after the session.</li>
+          {isDualNBack ? (
+            <>
+              <li>Each round shows one square and one letter.</li>
+              <li>If the square is in the same place as N rounds ago, press A.</li>
+              <li>If the letter is the same as N rounds ago, press L.</li>
+              <li>You can choose Fixed N, where N stays the same, or Adaptive N, where the game changes N after each 20-round block.</li>
+            </>
+          ) : (
+            <>
+              <li>Work in a quiet space and keep your focus on the prompt.</li>
+              <li>Respond as quickly and accurately as possible.</li>
+              <li>Your trial-by-trial responses will be summarized immediately after the session.</li>
+            </>
+          )}
         </ul>
         <div className="actions-row">
           <Link to="/tasks" className="inline-link">Back to task list</Link>

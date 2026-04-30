@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import LoadingState from '../components/ui/LoadingState';
 import StatusMessage from '../components/ui/StatusMessage';
+import GameContainer from '../features/dualNBack/GameContainer';
 import { completeSession } from '../services/sessionService';
 import { fetchTaskById, fetchTaskTrials } from '../services/taskService';
+
+const getCurrentTime = () => Date.now();
 
 export default function TaskPlayPage() {
   const { taskId } = useParams();
@@ -15,7 +18,7 @@ export default function TaskPlayPage() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionStartedAt] = useState(() => Date.now());
-  const [trialStartedAt, setTrialStartedAt] = useState(() => Date.now());
+  const trialStartedAtRef = useRef(null);
   const [responses, setResponses] = useState([]);
   const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState('');
@@ -44,7 +47,7 @@ export default function TaskPlayPage() {
   }, [taskId]);
 
   useEffect(() => {
-    setTrialStartedAt(Date.now());
+    trialStartedAtRef.current = getCurrentTime();
   }, [currentIndex]);
 
   if (loading) {
@@ -53,6 +56,10 @@ export default function TaskPlayPage() {
 
   if (error && !task) {
     return <StatusMessage tone="error" title="Task unavailable" message={error} />;
+  }
+
+  if (task?.id === 'dual-n-back') {
+    return <GameContainer task={task} />;
   }
 
   if (!task || !trials.length) {
@@ -67,7 +74,9 @@ export default function TaskPlayPage() {
       return;
     }
 
-    const reactionTime = Math.max(250, Date.now() - trialStartedAt);
+    const responseTime = getCurrentTime();
+    const trialStartedAt = trialStartedAtRef.current ?? sessionStartedAt;
+    const reactionTime = Math.max(250, responseTime - trialStartedAt);
     const correct = response === currentTrial.correctResponse;
     const nextResponses = [
       ...responses,
@@ -89,7 +98,7 @@ export default function TaskPlayPage() {
           task,
           trials: nextResponses,
           startedAt: sessionStartedAt,
-          endedAt: Date.now(),
+          endedAt: getCurrentTime(),
         });
         navigate('/session/complete', { state: { result } });
       } catch (requestError) {

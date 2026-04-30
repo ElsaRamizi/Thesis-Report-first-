@@ -62,6 +62,15 @@ export default function ResultsPage() {
         <Card title="Average Reaction Time" accent="cool"><p className="metric-value">{result.avgReactionTime} ms</p></Card>
         <Card title="Accuracy" accent="warm"><p className="metric-value">{result.accuracy}%</p></Card>
         <Card title="Error Rate"><p className="metric-value">{result.errorRate}%</p></Card>
+        {result.falseAlarmRate != null ? (
+          <Card title="False Alarm Rate"><p className="metric-value">{Math.round(result.falseAlarmRate * 1000) / 10}%</p></Card>
+        ) : null}
+        {result.maxNReached != null ? (
+          <Card title="Max N Reached"><p className="metric-value">{result.maxNReached}</p></Card>
+        ) : null}
+        {result.dPrime != null ? (
+          <Card title="d-prime"><p className="metric-value">{result.dPrime}</p></Card>
+        ) : null}
       </div>
 
       <ResultsCharts result={result} />
@@ -71,8 +80,8 @@ export default function ResultsPage() {
           {result.trials.map((trial) => (
             <div key={trial.index} className="trial-row">
               <span>Trial {trial.index}</span>
-              <span>{trial.stimulus}</span>
-              <span>{trial.response}</span>
+              <span>{trial.letter ? `N${trial.nLevel} | ${trial.letter} @ ${trial.position + 1}` : trial.stimulus}</span>
+              <span>{trial.positionOutcome ? `${trial.positionOutcome} / ${trial.letterOutcome}` : trial.response}</span>
               <span>{trial.reactionTime} ms</span>
               <span className={trial.correct ? 'result-good' : 'result-bad'}>{trial.correct ? 'Correct' : 'Error'}</span>
             </div>

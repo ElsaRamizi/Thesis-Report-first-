@@ -21,6 +21,14 @@ public class TaskCatalogService {
             6,
             "Progressive",
             List.of("Recall accuracy", "Reaction time", "Error rate")
+        ),
+        new TaskDefinitionResponse(
+            "dual-n-back",
+            "Adaptive Dual N-Back",
+            "Compare each position and letter with the item N trials back to assess updating, attention, and working memory.",
+            8,
+            "Adaptive",
+            List.of("Dual-stream accuracy", "False alarms", "d-prime", "N-level adaptation")
         )
     );
 
@@ -32,6 +40,11 @@ public class TaskCatalogService {
             new TaskTrialResponse("Select the sequence you just saw.", "3 - 6 - 1 - 4", null, List.of("3 - 1 - 6 - 4", "3 - 6 - 1 - 4", "6 - 3 - 1 - 4"), "3 - 6 - 1 - 4"),
             new TaskTrialResponse("Select the sequence you just saw.", "9 - 4 - 2 - 7 - 1", null, List.of("9 - 4 - 2 - 7 - 1", "9 - 2 - 4 - 7 - 1", "4 - 9 - 2 - 7 - 1"), "9 - 4 - 2 - 7 - 1"),
             new TaskTrialResponse("Select the sequence you just saw.", "5 - 8 - 3 - 6 - 2", null, List.of("5 - 8 - 6 - 3 - 2", "8 - 5 - 3 - 6 - 2", "5 - 8 - 3 - 6 - 2"), "5 - 8 - 3 - 6 - 2")
+        ),
+        "dual-n-back",
+        List.of(
+            new TaskTrialResponse("Adaptive Dual N-Back is generated locally by the game engine.", "block-1", null, List.of("Position match", "Letter match"), "Adaptive"),
+            new TaskTrialResponse("Adaptive Dual N-Back is generated locally by the game engine.", "block-2", null, List.of("Position match", "Letter match"), "Adaptive")
         )
     );
 

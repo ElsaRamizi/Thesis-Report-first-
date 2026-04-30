@@ -20,7 +20,7 @@ export default function ResultsCharts({ result }) {
     datasets: [
       {
         label: 'Reaction Time (ms)',
-        data: result.trials.map((trial) => trial.reactionTime),
+        data: result.trials.map((trial) => trial.reactionTime ?? trial.reactionTimePosition ?? trial.reactionTimeLetter ?? 0),
         borderColor: '#1f5f7a',
         backgroundColor: 'rgba(31, 95, 122, 0.18)',
         tension: 0.35,
@@ -30,10 +30,12 @@ export default function ResultsCharts({ result }) {
   };
 
   const accuracyData = {
-    labels: ['Accurate', 'Errors'],
+    labels: result.falseAlarmRate != null ? ['Accuracy', 'False alarms'] : ['Accurate', 'Errors'],
     datasets: [
       {
-        data: [result.accuracy, result.errorRate],
+        data: result.falseAlarmRate != null
+          ? [result.accuracy, Math.round(result.falseAlarmRate * 1000) / 10]
+          : [result.accuracy, result.errorRate],
         backgroundColor: ['#216c4a', '#b64d4d'],
         borderWidth: 0,
       },

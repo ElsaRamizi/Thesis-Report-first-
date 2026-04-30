@@ -30,6 +30,12 @@ public class AggregatedMetrics {
     @Column(nullable = false)
     private Double errorRate;
 
+    private Double falseAlarmRate;
+
+    private Integer maxNReached;
+
+    private Double dPrime;
+
     public AggregatedMetrics() {}
 
     public AggregatedMetrics(TestSession sessionId, Double avgReactionTime, Double accuracy, Double errorRate) {
@@ -37,6 +43,21 @@ public class AggregatedMetrics {
         this.avgReactionTime = avgReactionTime;
         this.accuracy = accuracy;
         this.errorRate = errorRate;
+    }
+
+    public AggregatedMetrics(
+        TestSession sessionId,
+        Double avgReactionTime,
+        Double accuracy,
+        Double errorRate,
+        Double falseAlarmRate,
+        Integer maxNReached,
+        Double dPrime
+    ) {
+        this(sessionId, avgReactionTime, accuracy, errorRate);
+        this.falseAlarmRate = falseAlarmRate;
+        this.maxNReached = maxNReached;
+        this.dPrime = dPrime;
     }
 
     public Long getId() {
@@ -59,6 +80,18 @@ public class AggregatedMetrics {
         return errorRate;
     }
 
+    public Double getFalseAlarmRate() {
+        return falseAlarmRate;
+    }
+
+    public Integer getMaxNReached() {
+        return maxNReached;
+    }
+
+    public Double getDPrime() {
+        return dPrime;
+    }
+
     public void setSessionId(TestSession sessionId) {
         this.sessionId = sessionId;
     }
@@ -73,5 +106,17 @@ public class AggregatedMetrics {
 
     public void setErrorRate(Double errorRate) {
         this.errorRate = errorRate;
+    }
+
+    public void setFalseAlarmRate(Double falseAlarmRate) {
+        this.falseAlarmRate = falseAlarmRate;
+    }
+
+    public void setMaxNReached(Integer maxNReached) {
+        this.maxNReached = maxNReached;
+    }
+
+    public void setDPrime(Double dPrime) {
+        this.dPrime = dPrime;
     }
 }

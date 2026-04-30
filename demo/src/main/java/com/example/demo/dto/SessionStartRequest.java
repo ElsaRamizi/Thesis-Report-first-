@@ -1,19 +1,15 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class SessionCompleteRequest {
+public class SessionStartRequest {
 
     private String taskType;
     private String difficultyLevel;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private List<TrialDataRequest> trials;
     private Integer initialN;
-    private Integer finalN;
 
-    public SessionCompleteRequest() {
+    public SessionStartRequest() {
     }
 
     public String getTaskType() {
@@ -40,35 +36,11 @@ public class SessionCompleteRequest {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public List<TrialDataRequest> getTrials() {
-        return trials;
-    }
-
-    public void setTrials(List<TrialDataRequest> trials) {
-        this.trials = trials;
-    }
-
     public Integer getInitialN() {
         return initialN;
     }
 
     public void setInitialN(Integer initialN) {
         this.initialN = initialN;
-    }
-
-    public Integer getFinalN() {
-        return finalN;
-    }
-
-    public void setFinalN(Integer finalN) {
-        this.finalN = finalN;
     }
 }

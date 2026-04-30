@@ -1,11 +1,12 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class SessionResultResponse {
+public class ClinicianSessionSummaryResponse {
 
     private Long sessionId;
+    private Long participantId;
+    private String participantEmail;
     private String taskType;
     private String taskTitle;
     private String difficultyLevel;
@@ -16,38 +17,14 @@ public class SessionResultResponse {
     private Double errorRate;
     private Double falseAlarmRate;
     private Integer maxNReached;
-    private Double dPrime;
-    private List<TrialResultResponse> trials;
 
-    public SessionResultResponse() {
+    public ClinicianSessionSummaryResponse() {
     }
 
-    public SessionResultResponse(
+    public ClinicianSessionSummaryResponse(
         Long sessionId,
-        String taskType,
-        String taskTitle,
-        String difficultyLevel,
-        LocalDateTime startTime,
-        LocalDateTime endTime,
-        Double avgReactionTime,
-        Double accuracy,
-        Double errorRate,
-        List<TrialResultResponse> trials
-    ) {
-        this.sessionId = sessionId;
-        this.taskType = taskType;
-        this.taskTitle = taskTitle;
-        this.difficultyLevel = difficultyLevel;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.avgReactionTime = avgReactionTime;
-        this.accuracy = accuracy;
-        this.errorRate = errorRate;
-        this.trials = trials;
-    }
-
-    public SessionResultResponse(
-        Long sessionId,
+        Long participantId,
+        String participantEmail,
         String taskType,
         String taskTitle,
         String difficultyLevel,
@@ -57,18 +34,33 @@ public class SessionResultResponse {
         Double accuracy,
         Double errorRate,
         Double falseAlarmRate,
-        Integer maxNReached,
-        Double dPrime,
-        List<TrialResultResponse> trials
+        Integer maxNReached
     ) {
-        this(sessionId, taskType, taskTitle, difficultyLevel, startTime, endTime, avgReactionTime, accuracy, errorRate, trials);
+        this.sessionId = sessionId;
+        this.participantId = participantId;
+        this.participantEmail = participantEmail;
+        this.taskType = taskType;
+        this.taskTitle = taskTitle;
+        this.difficultyLevel = difficultyLevel;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.avgReactionTime = avgReactionTime;
+        this.accuracy = accuracy;
+        this.errorRate = errorRate;
         this.falseAlarmRate = falseAlarmRate;
         this.maxNReached = maxNReached;
-        this.dPrime = dPrime;
     }
 
     public Long getSessionId() {
         return sessionId;
+    }
+
+    public Long getParticipantId() {
+        return participantId;
+    }
+
+    public String getParticipantEmail() {
+        return participantEmail;
     }
 
     public String getTaskType() {
@@ -109,13 +101,5 @@ public class SessionResultResponse {
 
     public Integer getMaxNReached() {
         return maxNReached;
-    }
-
-    public Double getDPrime() {
-        return dPrime;
-    }
-
-    public List<TrialResultResponse> getTrials() {
-        return trials;
     }
 }

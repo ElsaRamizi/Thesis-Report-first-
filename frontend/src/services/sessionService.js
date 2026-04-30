@@ -18,13 +18,27 @@ const normalizeResult = (payload) => {
     avgReactionTime: payload.avgReactionTime,
     accuracy: payload.accuracy,
     errorRate: payload.errorRate,
+    falseAlarmRate: payload.falseAlarmRate,
+    maxNReached: payload.maxNReached,
+    dPrime: payload.dPrime,
     trials: (payload.trials ?? []).map((trial, index) => ({
       id: trial.id,
-      index: index + 1,
+      index: trial.trialIndex ?? index + 1,
       stimulus: trial.stimulus,
       response: trial.response,
       correct: trial.correct,
       reactionTime: trial.reactionTime,
+      nLevel: trial.nLevel,
+      position: trial.position,
+      letter: trial.letter,
+      expectedPositionMatch: trial.expectedPositionMatch,
+      expectedLetterMatch: trial.expectedLetterMatch,
+      userPressedPosition: trial.userPressedPosition,
+      userPressedLetter: trial.userPressedLetter,
+      positionOutcome: trial.positionOutcome,
+      letterOutcome: trial.letterOutcome,
+      reactionTimePosition: trial.reactionTimePosition,
+      reactionTimeLetter: trial.reactionTimeLetter,
     })),
   };
 };
@@ -50,6 +64,41 @@ export const completeSession = async ({ task, trials, startedAt, endedAt }) => {
   };
 
   const response = await apiClient.post('/api/sessions/complete', payload);
+  return cacheLatestResult(normalizeResult(response.data));
+};
+
+export const startLiveSession = async ({ task, initialN, startedAt }) => {
+  const response = await apiClient.post('/api/session/start', {
+    taskType: task.id,
+    difficultyLevel: task.difficulty,
+    startTime: new Date(startedAt).toISOString(),
+    initialN,
+  });
+
+  return response.data;
+};
+
+export const recordLiveTrial = async ({ sessionId, trial }) => {
+  const response = await apiClient.post('/api/session/trial', {
+    sessionId,
+    ...trial,
+  });
+
+  return response.data;
+};
+
+export const endLiveSession = async ({ sessionId, endedAt, finalN }) => {
+  const response = await apiClient.post('/api/session/end', {
+    sessionId,
+    endTime: new Date(endedAt).toISOString(),
+    finalN,
+  });
+
+  return cacheLatestResult(normalizeResult(response.data));
+};
+
+export const fetchSessionMetrics = async (sessionId) => {
+  const response = await apiClient.get(`/api/session/${sessionId}/metrics`);
   return cacheLatestResult(normalizeResult(response.data));
 };
 

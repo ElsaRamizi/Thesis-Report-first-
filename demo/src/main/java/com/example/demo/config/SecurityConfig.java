@@ -33,6 +33,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/clinician/**").hasRole("CLINICIAN")
                     .requestMatchers("/api/user/**").hasAnyRole("USER", "CLINICIAN")
                     .requestMatchers("/api/sessions/**").hasAnyRole("USER", "CLINICIAN")
+                    .requestMatchers("/api/session/**").hasAnyRole("USER", "CLINICIAN")
                     .anyRequest().authenticated()
             )
             .sessionManagement(session ->

@@ -33,6 +33,10 @@ public class TestSession {
     @Column(nullable = false)
     private String difficultyLevel;
 
+    private Integer initialN;
+
+    private Integer finalN;
+
     public TestSession() {}
 
     public TestSession(User userId, String taskType, LocalDateTime startTime, LocalDateTime endTime, String difficultyLevel) {
@@ -41,6 +45,20 @@ public class TestSession {
         this.startTime = startTime;
         this.endTime = endTime;
         this.difficultyLevel = difficultyLevel;
+    }
+
+    public TestSession(
+        User userId,
+        String taskType,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        String difficultyLevel,
+        Integer initialN,
+        Integer finalN
+    ) {
+        this(userId, taskType, startTime, endTime, difficultyLevel);
+        this.initialN = initialN;
+        this.finalN = finalN;
     }
 
     public Long getId() {
@@ -67,6 +85,14 @@ public class TestSession {
         return difficultyLevel;
     }
 
+    public Integer getInitialN() {
+        return initialN;
+    }
+
+    public Integer getFinalN() {
+        return finalN;
+    }
+
     public void setUserId(User userId) {
         this.userId = userId;
     }
@@ -85,5 +111,13 @@ public class TestSession {
 
     public void setDifficultyLevel(String difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
+    }
+
+    public void setInitialN(Integer initialN) {
+        this.initialN = initialN;
+    }
+
+    public void setFinalN(Integer finalN) {
+        this.finalN = finalN;
     }
 }
