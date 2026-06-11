@@ -4,6 +4,7 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useAuth } from '../context/useAuth';
 
+// same login page for USER and CLINICIAN — role decides where we redirect
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -12,12 +13,15 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // if they got sent here from a protected page, go back after login
   const redirectTo = location.state?.from?.pathname;
 
+  /// update email/password in form state
   const handleChange = (event) => {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   };
 
+  /// form submit — call AuthContext.login then navigate to dashboard
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
@@ -28,28 +32,28 @@ export default function LoginPage() {
       const destination = redirectTo ?? (data.role === 'CLINICIAN' ? '/clinician/dashboard' : '/user/dashboard');
       navigate(destination, { replace: true });
     } catch (requestError) {
-      setError(requestError.response?.data?.message ?? 'Unable to sign in.');
+      setError(requestError.response?.data?.message ?? 'Login failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page auth-login">
+    <div className="auth-page">
       <div className="auth-panel">
-        <p className="eyebrow">MindMetrics</p>
-        <h1>Welcome back</h1>
-        <p className="auth-copy">Sign in to access your cognitive assessment workspace.</p>
+        <p className="eyebrow">ELTE · MindMetrics</p>
+        <h1>Sign in</h1>
+        <p className="auth-copy">Log in with the account you registered. Participants and clinicians use the same page.</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <Input label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
           <Input label="Password" name="password" type="password" value={form.password} onChange={handleChange} required />
           {error ? <p className="submit-error">{error}</p> : null}
-          <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Log In'}</Button>
+          <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</Button>
         </form>
 
         <p className="auth-footer">
-          Need an account? <Link to="/register">Create one</Link>
+          No account yet? <Link to="/register">Register</Link>
         </p>
       </div>
     </div>

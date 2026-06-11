@@ -1,3 +1,5 @@
+// N-back trial logic: generate stimuli, score HIT/MISS/FALSE_ALARM, adapt N per block
+
 export const OUTCOMES = {
   HIT: 'HIT',
   MISS: 'MISS',

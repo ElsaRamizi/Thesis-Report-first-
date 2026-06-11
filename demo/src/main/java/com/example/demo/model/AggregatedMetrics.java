@@ -36,6 +36,20 @@ public class AggregatedMetrics {
 
     private Double dPrime;
 
+    private Double medianReactionTime;
+
+    private Double missRate;
+
+    private Double responseVariability;
+
+    private Integer maxSpanReached;
+
+    private Double stroopInterferenceMs;
+
+    private Double stroopCongruentAccuracy;
+
+    private Double stroopIncongruentAccuracy;
+
     public AggregatedMetrics() {}
 
     public AggregatedMetrics(TestSession sessionId, Double avgReactionTime, Double accuracy, Double errorRate) {
@@ -92,6 +106,18 @@ public class AggregatedMetrics {
         return dPrime;
     }
 
+    public Double getMedianReactionTime() {
+        return medianReactionTime;
+    }
+
+    public Double getMissRate() {
+        return missRate;
+    }
+
+    public Double getResponseVariability() {
+        return responseVariability;
+    }
+
     public void setSessionId(TestSession sessionId) {
         this.sessionId = sessionId;
     }
@@ -118,5 +144,49 @@ public class AggregatedMetrics {
 
     public void setDPrime(Double dPrime) {
         this.dPrime = dPrime;
+    }
+
+    public void setMedianReactionTime(Double medianReactionTime) {
+        this.medianReactionTime = medianReactionTime;
+    }
+
+    public void setMissRate(Double missRate) {
+        this.missRate = missRate;
+    }
+
+    public void setResponseVariability(Double responseVariability) {
+        this.responseVariability = responseVariability;
+    }
+
+    public Integer getMaxSpanReached() {
+        return maxSpanReached;
+    }
+
+    public void setMaxSpanReached(Integer maxSpanReached) {
+        this.maxSpanReached = maxSpanReached;
+    }
+
+    public Double getStroopInterferenceMs() {
+        return stroopInterferenceMs;
+    }
+
+    public void setStroopInterferenceMs(Double stroopInterferenceMs) {
+        this.stroopInterferenceMs = stroopInterferenceMs;
+    }
+
+    public Double getStroopCongruentAccuracy() {
+        return stroopCongruentAccuracy;
+    }
+
+    public void setStroopCongruentAccuracy(Double stroopCongruentAccuracy) {
+        this.stroopCongruentAccuracy = stroopCongruentAccuracy;
+    }
+
+    public Double getStroopIncongruentAccuracy() {
+        return stroopIncongruentAccuracy;
+    }
+
+    public void setStroopIncongruentAccuracy(Double stroopIncongruentAccuracy) {
+        this.stroopIncongruentAccuracy = stroopIncongruentAccuracy;
     }
 }

@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import './index.css';
 
+// app entry — AuthProvider must wrap everything so useAuth works on all pages
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

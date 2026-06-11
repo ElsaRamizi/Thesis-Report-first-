@@ -1,9 +1,8 @@
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Card from '../components/ui/Card';
 import LoadingState from '../components/ui/LoadingState';
 import StatusMessage from '../components/ui/StatusMessage';
-import ResultsCharts from '../features/results/ResultsCharts';
+import SessionResultsDetail from '../features/results/SessionResultsDetail';
 import { fetchLatestSessionResult, getLatestSessionResult } from '../services/sessionService';
 
 export default function ResultsPage() {
@@ -14,7 +13,7 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (result) {
-      return;
+      return undefined;
     }
 
     let active = true;
@@ -58,39 +57,16 @@ export default function ResultsPage() {
 
       {result ? (
         <>
-      <div className="dashboard-grid results-metrics">
-        <Card title="Average Reaction Time" accent="cool"><p className="metric-value">{result.avgReactionTime} ms</p></Card>
-        <Card title="Accuracy" accent="warm"><p className="metric-value">{result.accuracy}%</p></Card>
-        <Card title="Error Rate"><p className="metric-value">{result.errorRate}%</p></Card>
-        {result.falseAlarmRate != null ? (
-          <Card title="False Alarm Rate"><p className="metric-value">{Math.round(result.falseAlarmRate * 1000) / 10}%</p></Card>
-        ) : null}
-        {result.maxNReached != null ? (
-          <Card title="Max N Reached"><p className="metric-value">{result.maxNReached}</p></Card>
-        ) : null}
-        {result.dPrime != null ? (
-          <Card title="d-prime"><p className="metric-value">{result.dPrime}</p></Card>
-        ) : null}
-      </div>
-
-      <ResultsCharts result={result} />
-
-      <Card title="Trial Log">
-        <div className="trial-log">
-          {result.trials.map((trial) => (
-            <div key={trial.index} className="trial-row">
-              <span>Trial {trial.index}</span>
-              <span>{trial.letter ? `N${trial.nLevel} | ${trial.letter} @ ${trial.position + 1}` : trial.stimulus}</span>
-              <span>{trial.positionOutcome ? `${trial.positionOutcome} / ${trial.letterOutcome}` : trial.response}</span>
-              <span>{trial.reactionTime} ms</span>
-              <span className={trial.correct ? 'result-good' : 'result-bad'}>{trial.correct ? 'Correct' : 'Error'}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      <StatusMessage tone="neutral" message="This summary now reflects the latest saved TestSession, TrialData, and AggregatedMetrics records for the signed-in user." />
-      <Link to="/tasks" className="inline-link">Back to task selection</Link>
+          <SessionResultsDetail result={result} />
+          <div className="actions-row">
+            {result.sessionId ? (
+              <Link to={`/sessions/${result.sessionId}`} className="inline-link">
+                Open this session permalink
+              </Link>
+            ) : null}
+            <Link to="/sessions" className="inline-link">Browse all sessions</Link>
+            <Link to="/tasks" className="inline-link">Back to task selection</Link>
+          </div>
         </>
       ) : null}
     </div>

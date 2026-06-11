@@ -1,3 +1,7 @@
+// Dual N-Back — each trial saved live via /api/session/trial
+// User checks if position + letter match N steps back (keys A / L)
+// N can change after each block when mode is adaptive
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -39,6 +43,7 @@ export default function GameContainer({ task }) {
   const [currentBlock, setCurrentBlock] = useState(1);
   const [liveSummary, setLiveSummary] = useState(() => computeSessionSummary([]));
   const [result, setResult] = useState(null);
+  const [blockFeedback, setBlockFeedback] = useState(null);
 
   const startedRef = useRef(false);
   const sessionIdRef = useRef(null);
@@ -86,7 +91,7 @@ export default function GameContainer({ task }) {
         beginNextTrial();
       })
       .catch((requestError) => {
-        setError(requestError.response?.data?.message ?? 'The Dual N-Back session could not be started.');
+        setError(requestError.response?.data?.message ?? 'Could not start session.');
         setStatus('error');
       });
   }, [beginNextTrial, config, gameMode, selectedN, task]);
@@ -158,6 +163,22 @@ export default function GameContainer({ task }) {
         activeBlockTrialsRef.current = [];
         setBlockMetrics((items) => [...items, gameMode === 'fixed' ? fixedMetrics : metrics]);
         setCurrentBlock(engineRef.current.currentBlock);
+
+        if (!sessionFinished) {
+          const metricsToShow = gameMode === 'fixed' ? fixedMetrics : metrics;
+          const nChange = metricsToShow.nextN > metricsToShow.previousN
+            ? 'N increased'
+            : metricsToShow.nextN < metricsToShow.previousN
+              ? 'N decreased'
+              : 'N unchanged';
+          setBlockFeedback({
+            blockNumber: completedTrials / config.blockSize,
+            ...metricsToShow,
+            nChange,
+          });
+          setStatus('block-feedback');
+          return;
+        }
       }
 
       if (sessionFinished) {
@@ -175,10 +196,15 @@ export default function GameContainer({ task }) {
 
       beginNextTrial();
     } catch (requestError) {
-      setError(requestError.response?.data?.message ?? 'A trial could not be saved.');
+      setError(requestError.response?.data?.message ?? 'Trial save failed.');
       setStatus('error');
     }
   }, [beginNextTrial, config.blockSize, currentTrial, gameMode, totalTrials]);
+
+  const continueAfterBlockFeedback = () => {
+    setBlockFeedback(null);
+    beginNextTrial();
+  };
 
   useEffect(() => {
     if (status !== 'running' || !currentTrial) {
@@ -264,15 +290,40 @@ export default function GameContainer({ task }) {
   }
 
   if (status === 'starting') {
-    return <LoadingState label="Starting adaptive Dual N-Back..." />;
+    return <LoadingState label="Starting..." />;
   }
 
   if (status === 'error') {
-    return <StatusMessage tone="error" title="Dual N-Back stopped" message={error} />;
+    return <StatusMessage tone="error" title="Error" message={error} />;
   }
 
   if (status === 'saving') {
-    return <LoadingState label="Saving trial data and computing metrics..." />;
+    return <LoadingState label="Saving..." />;
+  }
+
+  if (status === 'block-feedback' && blockFeedback) {
+    return (
+      <Card title={`Block ${blockFeedback.blockNumber} summary`} accent="warm">
+        <div className="session-summary">
+          <div>
+            <strong>{Math.round(blockFeedback.accuracy * 1000) / 10}%</strong>
+            <span>Block accuracy</span>
+          </div>
+          <div>
+            <strong>N {blockFeedback.previousN} → {blockFeedback.nextN}</strong>
+            <span>{blockFeedback.nChange}</span>
+          </div>
+          <div>
+            <strong>{blockFeedback.averageReactionTime} ms</strong>
+            <span>Avg RT</span>
+          </div>
+        </div>
+        <p>{Math.round(blockFeedback.falseAlarmRate * 1000) / 10}% false alarms in this block.</p>
+        <div className="actions-row">
+          <Button onClick={continueAfterBlockFeedback}>Continue</Button>
+        </div>
+      </Card>
+    );
   }
 
   if (status === 'complete' && result) {

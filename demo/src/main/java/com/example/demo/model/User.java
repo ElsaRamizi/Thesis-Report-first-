@@ -22,6 +22,9 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Long tokenVersion = 0L;
+
     public User() {}
 
     public User(String email, String password, String role) {
@@ -61,5 +64,18 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void setTokenVersion(Long tokenVersion) {
+        this.tokenVersion = tokenVersion;
+    }
+
+    /// called on logout — invalidates all existing JWTs for this user
+    public void incrementTokenVersion() {
+        this.tokenVersion = (this.tokenVersion == null ? 0L : this.tokenVersion) + 1L;
     }
 }

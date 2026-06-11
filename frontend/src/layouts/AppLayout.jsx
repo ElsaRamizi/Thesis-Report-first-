@@ -1,26 +1,17 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { NAV_BY_ROLE } from '../config/navigation';
 import { useAuth } from '../context/useAuth';
+import AppFooter from '../components/layout/AppFooter';
 
-const navItemsByRole = {
-  USER: [
-    { to: '/user/dashboard', label: 'Dashboard' },
-    { to: '/tasks', label: 'Tasks' },
-    { to: '/sessions', label: 'History' },
-    { to: '/results/latest', label: 'Results' },
-  ],
-  CLINICIAN: [
-    { to: '/clinician/dashboard', label: 'Clinician Dashboard' },
-    { to: '/user/dashboard', label: 'Participant View' },
-    { to: '/tasks', label: 'Tasks' },
-    { to: '/sessions', label: 'History' },
-    { to: '/results/latest', label: 'Results' },
-  ],
+const roleLabels = {
+  USER: 'Participant',
+  CLINICIAN: 'Clinician',
 };
 
 export default function AppLayout({ title, children }) {
   const { role, logout } = useAuth();
   const navigate = useNavigate();
-  const navItems = navItemsByRole[role] ?? [];
+  const navItems = NAV_BY_ROLE[role] ?? [];
 
   const handleLogout = () => {
     logout();
@@ -31,37 +22,43 @@ export default function AppLayout({ title, children }) {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand-block">
-          <p className="eyebrow">MindMetrics</p>
-          <h1>Research Console</h1>
+          <p className="eyebrow">ELTE · MindMetrics</p>
+          <h1>MindMetrics</h1>
         </div>
 
-        <nav className="nav-list">
+        <nav className="nav-list" aria-label="Main navigation">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
+              title={item.label}
               className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
             >
-              {item.label}
+              <span className="nav-link-full">{item.label}</span>
+              <span className="nav-link-short">{item.shortLabel}</span>
             </NavLink>
           ))}
         </nav>
 
         <div className="topbar-actions">
-          <span className="role-pill">{role}</span>
-          <button className="ghost-button topbar-logout" onClick={handleLogout}>Log Out</button>
+          <span className="role-pill">{roleLabels[role] ?? role}</span>
+          <button type="button" className="ghost-button topbar-logout" onClick={handleLogout}>
+            Log out
+          </button>
         </div>
       </header>
 
       <main className="main-panel">
         <header className="page-header">
           <div>
-            <p className="eyebrow">Signed in as {role}</p>
+            <p className="eyebrow">{roleLabels[role] ?? role}</p>
             <h2>{title}</h2>
           </div>
         </header>
         {children}
       </main>
+
+      <AppFooter />
     </div>
   );
 }

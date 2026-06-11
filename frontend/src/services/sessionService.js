@@ -20,6 +20,13 @@ const normalizeResult = (payload) => {
     errorRate: payload.errorRate,
     falseAlarmRate: payload.falseAlarmRate,
     maxNReached: payload.maxNReached,
+    maxSpanReached: payload.maxSpanReached,
+    stroopInterferenceMs: payload.stroopInterferenceMs,
+    stroopCongruentAccuracy: payload.stroopCongruentAccuracy,
+    stroopIncongruentAccuracy: payload.stroopIncongruentAccuracy,
+    medianReactionTime: payload.medianReactionTime,
+    missRate: payload.missRate,
+    responseVariability: payload.responseVariability,
     dPrime: payload.dPrime,
     trials: (payload.trials ?? []).map((trial, index) => ({
       id: trial.id,
@@ -100,6 +107,11 @@ export const endLiveSession = async ({ sessionId, endedAt, finalN }) => {
 export const fetchSessionMetrics = async (sessionId) => {
   const response = await apiClient.get(`/api/session/${sessionId}/metrics`);
   return cacheLatestResult(normalizeResult(response.data));
+};
+
+export const fetchSessionResult = async (sessionId) => {
+  const response = await apiClient.get(`/api/sessions/${sessionId}/metrics`);
+  return normalizeResult(response.data);
 };
 
 export const getLatestSessionResult = () => {

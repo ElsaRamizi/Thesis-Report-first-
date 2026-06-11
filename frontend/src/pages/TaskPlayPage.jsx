@@ -5,6 +5,8 @@ import Card from '../components/ui/Card';
 import LoadingState from '../components/ui/LoadingState';
 import StatusMessage from '../components/ui/StatusMessage';
 import GameContainer from '../features/dualNBack/GameContainer';
+import MemorySpanGame from '../features/memorySpan/MemorySpanGame';
+import StroopGame from '../features/stroop/StroopGame';
 import { completeSession } from '../services/sessionService';
 import { fetchTaskById, fetchTaskTrials } from '../services/taskService';
 
@@ -60,6 +62,14 @@ export default function TaskPlayPage() {
 
   if (task?.id === 'dual-n-back') {
     return <GameContainer task={task} />;
+  }
+
+  if (task?.id === 'stroop') {
+    return <StroopGame task={task} />;
+  }
+
+  if (task?.id === 'memory-span') {
+    return <MemorySpanGame task={task} />;
   }
 
   if (!task || !trials.length) {

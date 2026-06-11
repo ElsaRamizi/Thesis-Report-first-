@@ -41,6 +41,11 @@ export default function SessionStartPage() {
   }
 
   const isDualNBack = task?.id === 'dual-n-back';
+  const isStroop = task?.id === 'stroop';
+  const isMemorySpan = task?.id === 'memory-span';
+  const isEngineTask = isDualNBack || isStroop || isMemorySpan;
+  const trialCount = isDualNBack ? '60' : isStroop ? '40' : isMemorySpan ? 'Progressive' : trials.length;
+  const trialLabel = isMemorySpan ? 'Adaptive rounds' : isDualNBack ? 'Adaptive trials' : 'Trials';
 
   return (
     <div className="stack-lg">
@@ -52,8 +57,8 @@ export default function SessionStartPage() {
         <p>{task.description}</p>
         <div className="session-summary">
           <div>
-            <strong>{isDualNBack ? '60' : trials.length}</strong>
-            <span>{isDualNBack ? 'Adaptive trials' : 'Trials'}</span>
+            <strong>{trialCount}</strong>
+            <span>{trialLabel}</span>
           </div>
           <div>
             <strong>{task.durationMinutes} min</strong>
@@ -75,7 +80,21 @@ export default function SessionStartPage() {
               <li>If the letter is the same as N rounds ago, press L.</li>
               <li>You can choose Fixed N, where N stays the same, or Adaptive N, where the game changes N after each 20-round block.</li>
             </>
-          ) : (
+          ) : isStroop ? (
+            <>
+              <li>Each trial shows a color word printed in colored ink.</li>
+              <li>Select the ink color only — ignore what the word says.</li>
+              <li>Respond as quickly and accurately as possible.</li>
+              <li>The task measures mental flexibility and inhibitory control.</li>
+            </>
+          ) : isMemorySpan ? (
+            <>
+              <li>Digits appear one at a time — watch the full sequence.</li>
+              <li>After the sequence, enter the digits in the same order using the keypad.</li>
+              <li>Span length increases after correct recalls and ends after repeated errors.</li>
+              <li>This is a classic working-memory sequence-recall paradigm.</li>
+            </>
+          ) : isEngineTask ? null : (
             <>
               <li>Work in a quiet space and keep your focus on the prompt.</li>
               <li>Respond as quickly and accurately as possible.</li>

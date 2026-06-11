@@ -17,6 +17,13 @@ public class SessionResultResponse {
     private Double falseAlarmRate;
     private Integer maxNReached;
     private Double dPrime;
+    private Double medianReactionTime;
+    private Double missRate;
+    private Double responseVariability;
+    private Integer maxSpanReached;
+    private Double stroopInterferenceMs;
+    private Double stroopCongruentAccuracy;
+    private Double stroopIncongruentAccuracy;
     private List<TrialResultResponse> trials;
 
     public SessionResultResponse() {
@@ -113,6 +120,62 @@ public class SessionResultResponse {
 
     public Double getDPrime() {
         return dPrime;
+    }
+
+    public Double getMedianReactionTime() {
+        return medianReactionTime;
+    }
+
+    public void setMedianReactionTime(Double medianReactionTime) {
+        this.medianReactionTime = medianReactionTime;
+    }
+
+    public Double getMissRate() {
+        return missRate;
+    }
+
+    public void setMissRate(Double missRate) {
+        this.missRate = missRate;
+    }
+
+    public Double getResponseVariability() {
+        return responseVariability;
+    }
+
+    public void setResponseVariability(Double responseVariability) {
+        this.responseVariability = responseVariability;
+    }
+
+    public Integer getMaxSpanReached() {
+        return maxSpanReached;
+    }
+
+    public void setMaxSpanReached(Integer maxSpanReached) {
+        this.maxSpanReached = maxSpanReached;
+    }
+
+    public Double getStroopInterferenceMs() {
+        return stroopInterferenceMs;
+    }
+
+    public void setStroopInterferenceMs(Double stroopInterferenceMs) {
+        this.stroopInterferenceMs = stroopInterferenceMs;
+    }
+
+    public Double getStroopCongruentAccuracy() {
+        return stroopCongruentAccuracy;
+    }
+
+    public void setStroopCongruentAccuracy(Double stroopCongruentAccuracy) {
+        this.stroopCongruentAccuracy = stroopCongruentAccuracy;
+    }
+
+    public Double getStroopIncongruentAccuracy() {
+        return stroopIncongruentAccuracy;
+    }
+
+    public void setStroopIncongruentAccuracy(Double stroopIncongruentAccuracy) {
+        this.stroopIncongruentAccuracy = stroopIncongruentAccuracy;
     }
 
     public List<TrialResultResponse> getTrials() {

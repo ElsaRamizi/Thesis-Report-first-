@@ -10,7 +10,6 @@ import com.example.demo.service.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/session")
-@CrossOrigin(originPatterns = "*")
-/**
- * Provides the thesis-specified singular session API paths.
- */
+// same as SessionController but singular path — Dual N-Back frontend calls these
 public class SessionAliasController {
 
     private final SessionService sessionService;
@@ -32,6 +28,7 @@ public class SessionAliasController {
         this.sessionService = sessionService;
     }
 
+    /// N-Back game start — returns sessionId for trial posts
     @PostMapping("/start")
     public ResponseEntity<SessionStartResponse> startSession(
         @RequestBody SessionStartRequest request,
@@ -41,6 +38,7 @@ public class SessionAliasController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /// one trial saved immediately during N-Back
     @PostMapping("/trial")
     public ResponseEntity<TrialResultResponse> recordTrial(
         @RequestBody TrialSubmitRequest request,
@@ -50,6 +48,7 @@ public class SessionAliasController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /// game over — backend calculates accuracy etc
     @PostMapping("/end")
     public ResponseEntity<SessionResultResponse> endSession(
         @RequestBody SessionEndRequest request,
@@ -59,6 +58,7 @@ public class SessionAliasController {
         return ResponseEntity.ok(response);
     }
 
+    /// fetch results for a session id
     @GetMapping("/{sessionId}/metrics")
     public ResponseEntity<SessionResultResponse> getSessionMetrics(
         @PathVariable Long sessionId,

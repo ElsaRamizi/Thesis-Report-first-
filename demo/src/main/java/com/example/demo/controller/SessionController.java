@@ -13,7 +13,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,10 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/sessions")
-@CrossOrigin(originPatterns = "*")
-/**
- * Exposes endpoints for saving completed sessions and retrieving saved results.
- */
+// game session API — Stroop/Memory Span use /complete, N-Back can use these too
 public class SessionController {
 
     private final SessionService sessionService;
@@ -35,14 +31,8 @@ public class SessionController {
         this.sessionService = sessionService;
     }
 
+    /// Stroop + Memory Span — save whole session + all trials in one POST
     @PostMapping("/complete")
-    /**
-     * Persists a completed session for the authenticated user.
-     *
-     * @param request session payload
-     * @param authentication current authenticated principal
-     * @return saved session summary
-     */
     public ResponseEntity<SessionResultResponse> completeSession(
         @RequestBody SessionCompleteRequest request,
         Authentication authentication
@@ -51,38 +41,22 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /// dashboard / results page — most recent session with metrics
     @GetMapping("/latest")
-    /**
-     * Returns the latest saved session for the authenticated user.
-     *
-     * @param authentication current authenticated principal
-     * @return latest session summary
-     */
     public ResponseEntity<SessionResultResponse> getLatestSession(Authentication authentication) {
         SessionResultResponse response = sessionService.getLatestSessionResult(authentication.getName());
         return ResponseEntity.ok(response);
     }
 
+    /// session history list for participant
     @GetMapping
-    /**
-     * Returns historical session summaries for the authenticated user.
-     *
-     * @param authentication current authenticated principal
-     * @return session history list
-     */
     public ResponseEntity<List<SessionHistoryItemResponse>> getSessionHistory(Authentication authentication) {
         List<SessionHistoryItemResponse> response = sessionService.getSessionHistory(authentication.getName());
         return ResponseEntity.ok(response);
     }
 
+    /// start live session (also on /api/session/start via alias controller)
     @PostMapping("/start")
-    /**
-     * Starts a live session and returns its database id.
-     *
-     * @param request start payload
-     * @param authentication current authenticated principal
-     * @return created session id
-     */
     public ResponseEntity<SessionStartResponse> startSession(
         @RequestBody SessionStartRequest request,
         Authentication authentication
@@ -91,14 +65,8 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /// save one trial during Dual N-Back
     @PostMapping("/trial")
-    /**
-     * Persists one live trial for the authenticated user.
-     *
-     * @param request trial payload
-     * @param authentication current authenticated principal
-     * @return saved trial
-     */
     public ResponseEntity<TrialResultResponse> recordTrial(
         @RequestBody TrialSubmitRequest request,
         Authentication authentication
@@ -107,14 +75,8 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /// finish live session — compute aggregated metrics
     @PostMapping("/end")
-    /**
-     * Ends a live session and computes its metrics.
-     *
-     * @param request end payload
-     * @param authentication current authenticated principal
-     * @return session summary
-     */
     public ResponseEntity<SessionResultResponse> endSession(
         @RequestBody SessionEndRequest request,
         Authentication authentication
@@ -123,14 +85,8 @@ public class SessionController {
         return ResponseEntity.ok(response);
     }
 
+    /// one session detail with trials + metrics
     @GetMapping("/{sessionId}/metrics")
-    /**
-     * Returns persisted metrics for one session.
-     *
-     * @param sessionId session identifier
-     * @param authentication current authenticated principal
-     * @return session metrics
-     */
     public ResponseEntity<SessionResultResponse> getSessionMetrics(
         @PathVariable Long sessionId,
         Authentication authentication
